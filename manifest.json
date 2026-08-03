@@ -1,0 +1,24 @@
+{
+  "name": "喵喵日常 - 生活管理",
+  "short_name": "喵喵日常",
+  "description": "粉白可爱小狗风格的生活管理APP：首页、体重、姨妈、饮水、工作",
+  "start_url": "./index.html?v=6",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF5F8",
+  "theme_color": "#FF85A2",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
