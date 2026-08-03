@@ -147,7 +147,7 @@ async function boot(){
   }
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js?v=40').catch(function(){});
+    navigator.serviceWorker.register('sw.js?v=43').catch(function(){});
   }
 }
 
