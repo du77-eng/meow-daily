@@ -1,4 +1,4 @@
-const CACHE_NAME = "meow-daily-v42";
+const CACHE_NAME = "meow-daily-v43";
 const ASSETS = [
   "./",
   "./index.html",
@@ -49,10 +49,35 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const isIcon = url.pathname.includes('/icons/');
+
+  // 图标：缓存优先，保证稳定显示。
+  // GitHub Pages 对所有响应加 Access-Control-Allow-Origin:*，浏览器把同源图片当成
+  // "cors" 类型，因此运行时不能依赖 type==="basic" 的判断，这里直接缓存所有 ok 响应。
+  if (isIcon) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(event.request)
+          .then((res) => {
+            if (res && res.ok) {
+              const copy = res.clone();
+              caches.open(CACHE_NAME).then((c) => c.put(event.request, copy));
+            }
+            return res;
+          })
+          .catch(() => cached);
+      })
+    );
+    return;
+  }
+
+  // 其余资源：网络优先，失败回退缓存（index.html 兜底）
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        if (response.ok && response.type === "basic") {
+        if (response && response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
