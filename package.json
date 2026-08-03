@@ -1,0 +1,10 @@
+{
+  "name": "meow-daily",
+  "version": "3.0.0",
+  "description": "喵喵日常 — 粉色系日常记录 PWA",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\""
+  }
+}
