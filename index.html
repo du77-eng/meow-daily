@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="喵喵日常">
+<meta name="theme-color" content="#FF85A2">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="manifest" href="manifest.json?v=42">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>喵喵日常</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<div class="app">
+
+<!-- Sidebar -->
+<div class="sidebar">
+<div class="logo">
+<img src="icons/icon-192.png" alt="小狗" class="logo-img">
+</div>
+<div class="nav">
+<button class="nav-item nav-home active" onclick="switchTab('home',this)">
+<img class="nav-icon" src="icons/kitty-home.png" alt="首页">
+<span>首页</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-weight" onclick="switchTab('weight',this)">
+<img class="nav-icon" src="icons/kitty-weight.png" alt="体重">
+<span>体重</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-period" onclick="switchTab('period',this)">
+<img class="nav-icon" src="icons/kitty-period.png" alt="姨妈">
+<span>姨妈</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-water" onclick="switchTab('water',this)">
+<img class="nav-icon" src="icons/kitty-water.png" alt="饮水">
+<span>饮水</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-work" onclick="switchTab('work',this)">
+<img class="nav-icon" src="icons/kitty-work.png" alt="工作">
+<span>工作</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-rest" onclick="switchTab('rest',this)">
+<img class="nav-icon" src="icons/kitty-rest.png" alt="休息">
+<span>休息</span>
+<span class="dot"></span>
+</button>
+<button class="nav-item nav-book" onclick="switchTab('book',this)">
+<img class="nav-icon" src="icons/kitty-book.png" alt="读书">
+<span>读书</span>
+<span class="dot"></span>
+</button>
+</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+<div class="topbar">
+<div>
+<h1>喵喵日常</h1>
+<p id="topDate">--月--日 周-</p>
+</div>
+<div class="topbar-right">
+<button class="top-avatar" onclick="switchTab('settings')" title="设置">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+</div>
+</div>
+
+<div class="content" id="content">
+
+<!-- HOME TAB -->
+<div class="tab-panel active" id="tab-home">
+<div class="greet-card">
+<h2 id="greeting">今天也要元气满满喵~</h2>
+<p>记录生活点滴，做更好的自己</p>
+</div>
+
+<div class="home-status">
+<div class="status-card">
+<div class="icon">🍱</div>
+<div class="num" id="homeOrderCount">0</div>
+<div class="lbl">今日订单</div>
+</div>
+<div class="status-card green">
+<div class="icon">🚚</div>
+<div class="num" id="homeDoneCount">0</div>
+<div class="lbl">已送达</div>
+</div>
+<div class="status-card amber">
+<div class="icon">💰</div>
+<div class="num" id="homeIncome">¥0</div>
+<div class="lbl">预计收入</div>
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 4 4 8 7 13 3-5 7-9 7-13 0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+姨妈状态
+</div>
+<div id="homePeriodStatus"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v1h1a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3h1V7a5 5 0 0 1 5-5z"/><circle cx="12" cy="13" r="3"/></svg>
+体重趋势
+<span class="more" onclick="switchTab('weight')">更多 &rsaquo;</span>
+</div>
+<div id="homeWeightStatus"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+饮水进度
+<span class="more" onclick="switchTab('water')">更多 &rsaquo;</span>
+</div>
+<div id="homeWaterStatus"></div>
+</div>
+
+<div class="card">
+<div class="card-title">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+快捷入口
+</div>
+<div class="quick-actions">
+<button class="btn btn-primary" onclick="switchTab('work')">📋 管理工作</button>
+<button class="btn btn-secondary" onclick="switchTab('period')">🌸 记录姨妈</button>
+<button class="btn btn-outline" onclick="switchTab('rest')">😴 记录休息</button>
+<button class="btn btn-outline" onclick="switchTab('book')">📚 记录读书</button>
+</div>
+</div>
+</div>
+
+<!-- WEIGHT TAB -->
+<div class="tab-panel" id="tab-weight">
+<div class="weight-input-card">
+<div class="label" style="display:flex;align-items:center;justify-content:space-between">
+<span>今日体重</span>
+<div class="wunit-toggle">
+<button class="wunit-btn active" id="unitKg" onclick="switchWeightUnit('kg')">KG</button>
+<button class="wunit-btn" id="unitJin" onclick="switchWeightUnit('jin')">斤</button>
+</div>
+</div>
+<div class="weight-input-row">
+<input type="number" id="weightInput" placeholder="0.00" step="0.01">
+<span id="weightUnitLabel">kg</span>
+</div>
+<div class="quick-actions">
+<button class="btn btn-primary" onclick="saveWeight()">记录体重</button>
+<button class="btn btn-outline" onclick="document.getElementById('weightInput').value=''">清空</button>
+</div>
+</div>
+
+<div class="weight-stats">
+<div class="weight-stat"><div class="num" id="weightLatest">--</div><div class="lbl">最新体重</div></div>
+<div class="weight-stat"><div class="num" id="weightBMI">--</div><div class="lbl">BMI</div></div>
+<div class="weight-stat"><div class="num" id="weightChange">--</div><div class="lbl">较上次</div></div>
+</div>
+
+<div class="card">
+<div class="card-title">📉 近7次趋势</div>
+<div class="weight-chart" id="weightChart">记录体重后显示趋势图</div>
+</div>
+
+<div class="card">
+<div class="card-title">📝 历史记录</div>
+<div class="mini-list" id="weightList"></div>
+</div>
+</div>
+
+<!-- PERIOD TAB -->
+<div class="tab-panel" id="tab-period">
+<div id="periodContent"></div>
+</div>
+
+<!-- WATER TAB -->
+<div class="tab-panel" id="tab-water">
+<div id="waterContent"></div>
+</div>
+
+<!-- WORK TAB -->
+<div class="tab-panel" id="tab-work">
+<div class="date-bar">
+<h2 id="todayLabel">今日订单</h2>
+<div class="date-actions">
+<button class="date-btn" onclick="clearToday()">清空</button>
+</div>
+</div>
+<div class="summary-row" id="summaryRow"></div>
+<div class="quick-actions">
+<button class="btn btn-primary" onclick="openImportModal()">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+导入接龙
+</button>
+<button class="btn btn-secondary" onclick="openAddModal()">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+添加订单
+</button>
+</div>
+<div class="order-list" id="orderList"></div>
+</div>
+
+<!-- REST TAB -->
+<div class="tab-panel" id="tab-rest">
+<div class="rest-hero">
+<div class="rest-hero-row">
+<div class="rest-hero-icon"><img src="icons/kitty-rest.png" alt="休息" class="rest-hero-img"></div>
+<div class="rest-hero-text">
+<div class="rest-hero-label">休息打卡</div>
+<div class="rest-hero-title" id="restTodayTitle">今天也要好好休息</div>
+<div class="rest-hero-sub" id="restTodaySub">上午 / 下午 各可打卡一次</div>
+</div>
+</div>
+</div>
+
+<div class="rest-clockins">
+<button class="rest-clockin" id="restAmBtn" onclick="clockInRest('am')">
+<div class="rest-clockin-emoji">☀️</div>
+<div class="rest-clockin-label">上午休息</div>
+<div class="rest-clockin-time" id="restAmTime">点击打卡</div>
+</button>
+<button class="rest-clockin" id="restPmBtn" onclick="clockInRest('pm')">
+<div class="rest-clockin-emoji">🌙</div>
+<div class="rest-clockin-label">下午休息</div>
+<div class="rest-clockin-time" id="restPmTime">点击打卡</div>
+</button>
+</div>
+
+<button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:14px" onclick="toggleBackfill()">➕ 补打卡（之前的日子也能记）</button>
+<div class="rest-backfill" id="restBackfillPanel" style="display:none">
+<div class="rest-backfill-row">
+<label class="rest-backfill-label">日期</label>
+<input type="date" id="restBackfillDate" class="rest-backfill-date">
+</div>
+<div class="rest-backfill-row">
+<label class="rest-backfill-label">时段</label>
+<div class="rest-backfill-periods">
+<button class="btn btn-primary" id="restBfAm" onclick="selectBackfillPeriod('am')">上午</button>
+<button class="btn btn-secondary" id="restBfPm" onclick="selectBackfillPeriod('pm')">下午</button>
+</div>
+<input type="hidden" id="restBackfillPeriod" value="am">
+</div>
+<button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="backfillRest()">✅ 确认补打</button>
+</div>
+
+<div class="rest-stats">
+<div class="rest-stat"><div class="num" id="restMonthNum">0</div><div class="lbl">本月休息(天)</div></div>
+<div class="rest-stat"><div class="num" id="restTotalNum">0</div><div class="lbl">累计休息(天)</div></div>
+</div>
+
+<div class="card">
+<div class="card-title">📆 本周总览</div>
+<div id="restWeekGrid" class="rest-week-grid"></div>
+</div>
+
+<div class="card">
+<div class="card-title">🗓️ 本月总览</div>
+<div id="restMonthGrid" class="rest-month-grid"></div>
+</div>
+
+<div class="card">
+<div class="card-title">📅 最近休息记录</div>
+<div id="restHistoryList"></div>
+</div>
+</div>
+
+<!-- BOOK TAB -->
+<div class="tab-panel" id="tab-book">
+<div class="book-hero">
+<div class="book-hero-row">
+<div class="book-hero-icon"><img src="icons/kitty-book.png" alt="读书" class="book-hero-img"></div>
+<div class="book-hero-text">
+<div class="book-hero-label">我的书单</div>
+<div class="book-hero-title" id="bookHeroTitle">读一本好书喵~</div>
+<div class="book-hero-sub" id="bookHeroSub">未读 0 · 在读 0 · 已读 0</div>
+</div>
+</div>
+</div>
+
+<div class="book-stats">
+<div class="book-stat"><div class="num" id="bookUnreadNum">0</div><div class="lbl">未读</div></div>
+<div class="book-stat"><div class="num" id="bookReadingNum">0</div><div class="lbl">在读</div></div>
+<div class="book-stat"><div class="num" id="bookDoneNum">0</div><div class="lbl">已读</div></div>
+</div>
+
+<div class="card">
+<div class="book-tabs">
+<button class="book-tab active" id="bookTabUnread" onclick="switchBookTab('unread')">📚 未读</button>
+<button class="book-tab" id="bookTabReading" onclick="switchBookTab('reading')">📖 在读</button>
+<button class="book-tab" id="bookTabDone" onclick="switchBookTab('done')">✅ 已读</button>
+</div>
+<div id="bookList"></div>
+</div>
+
+<div class="card">
+<div class="card-title">✨ 猜你喜欢</div>
+<p style="font-size:12px;color:var(--text-mute);margin-top:-8px;margin-bottom:10px">根据你已读/在读的书推荐</p>
+<div id="bookRecommendList"></div>
+</div>
+
+<button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="openBookModal()">+ 添加一本书</button>
+</div>
+
+<!-- SETTINGS TAB -->
+<div class="tab-panel" id="tab-settings">
+<div class="settings-section">
+<h3>菜单价格</h3>
+<div id="priceList"></div>
+<button class="btn btn-secondary" style="margin-top:10px;font-size:13px;padding:8px 16px;width:auto" onclick="addNewFood()">+ 添加新菜品</button>
+</div>
+<div class="settings-section">
+<h3>体重设置</h3>
+<div class="setting-row">
+<label>身高（cm）</label>
+<input type="number" id="heightInput" value="160" onchange="updateHeight(this.value)">
+</div>
+</div>
+<div class="settings-section">
+<h3>数据管理</h3>
+<div class="setting-row">
+<label>已保存订单天数</label>
+<span id="dataCount" style="color:var(--text-mute);font-size:13px">0 天</span>
+</div>
+<div class="setting-row">
+<label>体重记录数</label>
+<span id="weightCount" style="color:var(--text-mute);font-size:13px">0 条</span>
+</div>
+<div class="setting-row">
+<label>饮水记录天数</label>
+<span id="waterCount" style="color:var(--text-mute);font-size:13px">0 天</span>
+</div>
+<div class="setting-row">
+<label>书籍数量</label>
+<span id="bookCount" style="color:var(--text-mute);font-size:13px">0 本</span>
+</div>
+<button class="btn btn-secondary" style="width:100%;margin-top:10px;font-size:14px" onclick="openBackup()">📤 备份数据（换手机/重装前存一份）</button>
+<button class="btn btn-secondary" style="width:100%;margin-top:8px;font-size:14px" onclick="openRestore()">📥 恢复数据（粘贴备份拿回记录）</button>
+<button class="danger-btn" onclick="clearAllData()">清空所有数据</button>
+</div>
+<div class="settings-section">
+<h3>主题颜色</h3>
+<p style="font-size:12px;color:var(--text-mute);margin-bottom:10px">选择喜欢的背景色调，会同步应用到背景和按钮</p>
+<div class="theme-grid" id="themeGrid"></div>
+</div>
+<div class="settings-section">
+<h3>隐私与安全</h3>
+<p style="font-size:12px;color:var(--text-mute);margin-bottom:10px">所有记录都以 AES-GCM 加密后保存在本机，不上传任何服务器。可再加一道密码锁。</p>
+<div class="setting-row">
+<label>密码锁</label>
+<span id="lockStatus" style="color:var(--text-mute);font-size:13px">未开启</span>
+</div>
+<button class="btn btn-secondary" id="lockToggleBtn" style="width:100%;margin-top:10px;font-size:14px" onclick="openLockModal()">🔒 开启密码锁</button>
+<div class="setting-row" style="margin-top:14px">
+<label>运行自检</label>
+<span style="color:var(--text-mute);font-size:12px">检查加密与核心逻辑</span>
+</div>
+<button class="btn btn-secondary" id="selfTestBtn" style="width:100%;margin-top:10px;font-size:14px" onclick="runSelfTestPanel()">🩺 运行自检</button>
+<div id="selfTestResult" style="margin-top:10px"></div>
+</div>
+<div class="settings-section">
+<h3>关于</h3>
+<p style="font-size:13px;color:var(--text-mute);line-height:1.8">
+喵喵日常 v3.0.0<br>
+粉白可爱小狗风格生活管理APP<br>
+首页 · 体重 · 姨妈 · 饮水 · 工作 · 休息 · 读书<br>
+数据保存在本地，无需联网<br>
+<b style="color:#e8538a">更新功能时不用删除重装！</b>直接打开下拉刷新就是新版，记录不会丢<br>
+若换手机/重装，请先用上方「备份数据」存一份，再「恢复数据」拿回
+</p>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+<div class="modal">
+<div class="modal-header">
+<h3>导入接龙</h3>
+<button class="modal-close" onclick="closeModal('importModal')">&times;</button>
+</div>
+<p style="font-size:13px;color:var(--text-mute);margin-bottom:12px">把群里的接龙文字全部复制粘贴进来，自动解析菜品、地点、时间</p>
+<div class="form-group">
+<label>接龙内容</label>
+<textarea id="relayText" placeholder="粘贴接龙文字...&#10;例如：&#10;今日菜品&#10;面皮8元&#10;1. 昵称 地点 时间 菜品"></textarea>
+</div>
+<div id="parsePreview" style="display:none;margin-bottom:12px">
+<label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">解析预览</label>
+<div id="parseResult" style="font-size:13px;color:var(--text);background:var(--pink-bg);padding:10px;border-radius:10px;max-height:200px;overflow-y:auto"></div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModal('importModal')">取消</button>
+<button class="btn btn-secondary" onclick="previewRelay()">预览解析</button>
+<button class="btn btn-primary" onclick="confirmImport()">导入</button>
+</div>
+</div>
+</div>
+
+<!-- Backup Modal -->
+<div class="modal-overlay" id="backupModal">
+<div class="modal">
+<div class="modal-header">
+<h3>📤 备份数据</h3>
+<button class="modal-close" onclick="closeModal('backupModal')">&times;</button>
+</div>
+<p style="font-size:13px;color:var(--text-mute);margin-bottom:10px">这包含你所有的订单、体重、饮水、经期记录。<b>复制下面全部内容存到备忘录</b>，或点下载成文件。重装APP后再粘贴回来就能恢复。</p>
+<div class="form-group">
+<label>备份内容（请全部复制保存）</label>
+<textarea id="backupText" readonly style="height:200px;font-size:11px;line-height:1.5;word-break:break-all;background:#fff"></textarea>
+</div>
+<div class="form-group" style="margin-top:14px">
+<label>🕒 自动备份（本地最近 7 天）</label>
+<div id="snapshotList"></div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModal('backupModal')">关闭</button>
+<button class="btn btn-secondary" onclick="downloadBackup()">下载文件</button>
+<button class="btn btn-primary" onclick="copyBackup()">复制全部</button>
+</div>
+</div>
+</div>
+
+<!-- Restore Modal -->
+<div class="modal-overlay" id="restoreModal">
+<div class="modal">
+<div class="modal-header">
+<h3>📥 恢复数据</h3>
+<button class="modal-close" onclick="closeModal('restoreModal')">&times;</button>
+</div>
+<p style="font-size:13px;color:var(--text-mute);margin-bottom:10px">把之前备份的内容<b>粘贴</b>进来，或从文件选择。恢复会<b>覆盖当前所有数据</b>。</p>
+<div class="form-group">
+<label>粘贴备份内容</label>
+<textarea id="restoreText" placeholder="把备份的整段内容粘贴到这里..." style="height:150px;font-size:11px;line-height:1.5"></textarea>
+</div>
+<div class="form-group">
+<label>或从文件选择（.json / .txt）</label>
+<input type="file" id="restoreFile" accept=".json,.txt,application/json,text/plain" onchange="restoreFromFile(this)" style="font-size:13px">
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModal('restoreModal')">取消</button>
+<button class="btn btn-primary" onclick="restoreData()">恢复</button>
+</div>
+</div>
+</div>
+
+<!-- Book Modal -->
+<div class="modal-overlay" id="bookModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="bookModalTitle">添加书籍</h3>
+<button class="modal-close" onclick="closeModal('bookModal')">&times;</button>
+</div>
+<input type="hidden" id="bookEditId">
+<div class="form-group">
+<label>从书库快速添加（可选）</label>
+<select id="bookLibrarySelect" onchange="fillBookFromLibrary(this.value)" style="font-size:14px">
+<option value="">-- 手动输入 --</option>
+</select>
+</div>
+<div class="form-group">
+<label>书名 *</label>
+<input type="text" id="bookTitle" placeholder="输入书名" style="font-size:14px">
+</div>
+<div class="form-group">
+<label>作者</label>
+<input type="text" id="bookAuthor" placeholder="输入作者" style="font-size:14px">
+</div>
+<div class="form-group">
+<label>分类</label>
+<select id="bookCategory" style="font-size:14px"></select>
+</div>
+<div class="form-group">
+<label>状态</label>
+<select id="bookStatus" style="font-size:14px">
+<option value="unread">未读</option>
+<option value="reading">在读</option>
+<option value="done">已读</option>
+</select>
+</div>
+<div class="form-group">
+<label>进度（0-100%）</label>
+<input type="number" id="bookProgress" min="0" max="100" value="0" style="font-size:14px">
+</div>
+<div class="form-group">
+<label>评分（0-5）</label>
+<input type="number" id="bookRating" min="0" max="5" value="0" style="font-size:14px">
+</div>
+<div class="form-group">
+<label>笔记/心得</label>
+<textarea id="bookNote" placeholder="写点什么吧..." style="height:80px;font-size:13px"></textarea>
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModal('bookModal')">取消</button>
+<button class="btn btn-primary" onclick="saveBook()">保存</button>
+</div>
+</div>
+</div>
+
+<!-- Add/Edit Order Modal -->
+<div class="modal-overlay" id="addModal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="addModalTitle">添加订单</h3>
+<button class="modal-close" onclick="closeModal('addModal')">&times;</button>
+</div>
+<div class="quick-add-wrap">
+<label>🐾 一句话快速添加</label>
+<textarea id="quickAddText" placeholder="直接粘贴一段话，自动识别~&#10;例：八楼骨科3份肉酱米线，加点配菜，11点吃&#10;例：某某 12楼一份凉面 点半"></textarea>
+<button class="smart-btn" onclick="smartParseOrder()">✨ 智能识别填表</button>
+<div class="parse-pop" id="parsePop"></div>
+</div>
+<hr class="modal-divider">
+<div class="form-group">
+<label>昵称</label>
+<input type="text" id="addNick" placeholder="客户昵称（可留空）">
+</div>
+<div class="form-group">
+<label>菜品</label>
+<div class="food-builder" id="foodBuilder">
+<div class="food-item-row">
+<select class="food-type" onchange="onFoodTypeChange(this)">
+<option value="面皮">面皮</option>
+<option value="肉酱米线">肉酱米线</option>
+<option value="手打柠檬茶">柠檬茶</option>
+</select>
+<input type="number" class="food-qty" value="1" min="1" style="width:60px" placeholder="数量">
+<select class="food-spice" style="width:80px">
+<option value="">不辣</option>
+<option value="微辣">微辣</option>
+<option value="中辣">中辣</option>
+<option value="特辣">特辣</option>
+</select>
+<button class="food-add-btn" onclick="addFoodRow()">+ 加菜</button>
+</div>
+</div>
+<input type="text" id="addFoodText" placeholder="或直接输入：面皮2份中辣, 柠檬茶1杯" style="margin-top:8px">
+</div>
+<div class="form-group">
+<label>送餐地点</label>
+<input type="text" id="addLoc" placeholder="如：鼎新楼20楼 / 八楼骨科">
+</div>
+<hr class="modal-divider">
+<div class="form-row">
+<div class="form-group" style="max-width:120px">
+<label>时间</label>
+<input type="text" id="addTime" placeholder="如：11:00">
+</div>
+<div class="form-group">
+<label>备注</label>
+<input type="text" id="addNote" placeholder="如：加青菜鸡蛋、榨菜">
+</div>
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeModal('addModal')">取消</button>
+<button class="btn btn-primary" onclick="confirmAdd()">保存</button>
+</div>
+</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Lock Screen -->
+<div class="lock-screen" id="lockScreen">
+<div class="lock-card">
+<div class="lock-emoji">🔒</div>
+<h3>喵喵日常已上锁</h3>
+<p class="lock-tip">请输入密码解锁</p>
+<input type="password" id="lockInput" inputmode="numeric" placeholder="请输入密码" onkeydown="if(event.key==='Enter')unlockApp()">
+<div class="lock-error" id="lockError">密码不正确，请重试</div>
+<button class="btn btn-primary" style="width:100%" onclick="unlockApp()">解锁</button>
+</div>
+</div>
+
+<!-- Lock Modal -->
+<div class="modal-overlay" id="lockModal">
+<div class="modal">
+<div class="modal-header">
+<h3>设置密码锁</h3>
+<button class="modal-close" onclick="closeLock()">&times;</button>
+</div>
+<p style="font-size:13px;color:var(--text-mute);margin-bottom:12px">开启后每次打开都需要输入密码。数据本身始终加密保存，密码只是额外的一道门。<b style="color:#e8538a">密码忘记无法找回</b>，请务必记牢，并提前做好备份。</p>
+<div class="form-group">
+<label>设置密码（至少 4 位）</label>
+<input type="password" id="lockPin1" inputmode="numeric" placeholder="请输入密码">
+</div>
+<div class="form-group">
+<label>再次确认</label>
+<input type="password" id="lockPin2" inputmode="numeric" placeholder="请再次输入">
+</div>
+<div class="modal-actions">
+<button class="btn btn-outline" onclick="closeLock()">取消</button>
+<button class="btn btn-primary" onclick="saveLock()">开启密码锁</button>
+</div>
+</div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
