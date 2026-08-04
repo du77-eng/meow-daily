@@ -1,4 +1,4 @@
-const CACHE_NAME = "meow-daily-v44";
+const CACHE_NAME = "meow-daily-v45";
 const ASSETS = [
   "./",
   "./index.html",
