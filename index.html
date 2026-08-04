@@ -11,7 +11,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<link rel="manifest" href="manifest.json?v=43">
+<link rel="manifest" href="manifest.json?v=44">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <title>喵喵日常</title>
@@ -476,11 +476,12 @@
 </div>
 <div class="form-group">
 <label>书名 *</label>
-<input type="text" id="bookTitle" placeholder="输入书名" style="font-size:14px">
+<input type="text" id="bookTitle" placeholder="输入书名，例如：活着" style="font-size:14px" oninput="updateAuthorSuggestions()">
+<div id="bookAuthorSuggest" class="book-suggest" style="display:none"></div>
 </div>
 <div class="form-group">
 <label>作者</label>
-<input type="text" id="bookAuthor" placeholder="输入作者" style="font-size:14px">
+<input type="text" id="bookAuthor" placeholder="输入作者，或从上方点选" style="font-size:14px">
 </div>
 <div class="form-group">
 <label>分类</label>
