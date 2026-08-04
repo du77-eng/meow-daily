@@ -6,6 +6,54 @@ import { todayKey, escapeHtml, recommendBooks } from '../util.js';
 /* ---- module state ---- */
 export let currentBookTab = 'unread';
 
+/* 兼容单作者字符串 / 多作者数组，统一返回作者数组 */
+export function libAuthors(b){
+  if(!b) return [];
+  let a = (b.authors !== undefined) ? b.authors : b.author;
+  if(Array.isArray(a)) return a.filter(function(x){ return x !== undefined && x !== null && x !== ''; });
+  if(a === undefined || a === null || a === '') return [];
+  return [a];
+}
+
+/* 规范化书名：去空格、去标点（含《》、中英文标点），转小写，便于模糊匹配 */
+function normalizeTitle(t){
+  return (t||'').toLowerCase()
+    .replace(/\s+/g,'')
+    .replace(/[《》「」“”‘’'",，。、：:！!？?（）()\[\]【】\-_—]/g,'');
+}
+
+/* 书名 -> {title, authors:[...], category, desc} 索引（多作者合并去重） */
+let _titleIndex = null;
+function getTitleIndex(){
+  if(_titleIndex) return _titleIndex;
+  const map = new Map();
+  BUILT_IN_LIBRARY.forEach(function(b){
+    const key = normalizeTitle(b.title);
+    if(!key) return;
+    const authors = libAuthors(b);
+    if(map.has(key)){
+      const cur = map.get(key);
+      authors.forEach(function(a){ if(cur.authors.indexOf(a) === -1) cur.authors.push(a); });
+    } else {
+      map.set(key, { key:key, title:b.title, authors:authors.slice(), category:b.category, desc:b.desc });
+    }
+  });
+  _titleIndex = map;
+  return map;
+}
+
+/* 输入书名（支持模糊/子串/带《》/带空格），返回匹配的书及其全部作者 */
+export function searchBooksByTitle(query){
+  const q = normalizeTitle(query);
+  const idx = getTitleIndex();
+  if(!q) return [];
+  const res = [];
+  idx.forEach(function(v){
+    if(v.key.indexOf(q) !== -1) res.push(v);
+  });
+  return res.slice(0, 20);
+}
+
 /* ===== Books Library ===== */
 export const BOOK_CATEGORIES = ['小说','文学','历史','商业','自我成长','心理学','科幻','悬疑','传记','美食','综合'];
 export const BUILT_IN_LIBRARY = [
@@ -60,9 +108,9 @@ export const BUILT_IN_LIBRARY = [
   {title:'也许你该找个人聊聊',author:'洛莉·戈特利布',category:'心理学',desc:'心理咨询师与来访者的真实故事。'},
   {title:'自卑与超越',author:'阿德勒',category:'心理学',desc:'理解自卑感与人生意义。'},
   {title:'乌合之众',author:'古斯塔夫·勒庞',category:'心理学',desc:'群体心理与集体行为的经典剖析。'},
-  {title:'社会心理学',author:'戴维·迈尔斯',category:'心理学',desc:'系统理解人与人相互影响的学科。'},
+  {title:'社会心理学',authors:['戴维·迈尔斯','琼·特韦奇'],category:'心理学',desc:'系统理解人与人相互影响的学科。'},
   {title:'爱的艺术',author:'艾里希·弗洛姆',category:'心理学',desc:'爱是一种需要学习的能力。'},
-  {title:'亲密关系',author:'罗兰·米勒',category:'心理学',desc:'科学视角下的爱情与婚姻。'},
+  {title:'亲密关系',authors:['罗兰·米勒','丹尼尔·珀尔曼'],category:'心理学',desc:'科学视角下的爱情与婚姻。'},
   {title:'情绪勒索',author:'苏珊·福沃德',category:'心理学',desc:'识别并摆脱情感操控。'},
   {title:'三体',author:'刘慈欣',category:'科幻',desc:'中国科幻巅峰，地球文明的宇宙命运。'},
   {title:'流浪地球',author:'刘慈欣',category:'科幻',desc:'带着地球去流浪的宏大想象。'},
@@ -90,7 +138,12 @@ export const BUILT_IN_LIBRARY = [
   {title:'如何阅读一本书',author:'莫提默·艾德勒',category:'综合',desc:'系统提升阅读能力的经典指南。'},
   {title:'纳瓦尔宝典',author:'埃里克·乔根森',category:'综合',desc:'关于财富与幸福的智慧合集。'},
   {title:'达·芬奇传',author:'沃尔特·艾萨克森',category:'综合',desc:'跨界天才的好奇心与创造力。'},
-  {title:'第五项修炼',author:'彼得·圣吉',category:'综合',desc:'学习型组织的艺术与实务。'}
+  {title:'第五项修炼',author:'彼得·圣吉',category:'综合',desc:'学习型组织的艺术与实务。'},
+  /* —— 以下为真实合著书，用于演示「同一书名多位作者，可逐个选择」—— */
+  {title:'心理学与生活',authors:['菲利普·津巴多','理查德·格里格'],category:'心理学',desc:'经典心理学入门教材，津巴多与格里格合著。'},
+  {title:'算法导论',authors:['托马斯·科尔曼','查尔斯·雷瑟森','罗纳德·李维斯特','克利福德·斯坦'],category:'综合',desc:'计算机经典教材，四位作者合著（CLRS）。'},
+  {title:'计算机程序的构造和解释',authors:['哈罗德·艾伯森','杰拉德·萨斯曼'],category:'综合',desc:'经典计算机教材（SICP），两位作者合著。'},
+  {title:'重构',authors:['马丁·福勒','肯特·贝克'],category:'综合',desc:'改善既有代码的设计，福勒与贝克等合著。'}
 ];
 
 export function switchBookTab(tab){
@@ -222,7 +275,7 @@ export function openBookModal(id){
   const libSel = $('bookLibrarySelect');
   const catSel = $('bookCategory');
   catSel.innerHTML = BOOK_CATEGORIES.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
-  libSel.innerHTML = '<option value="">-- 手动输入 --</option>' + BUILT_IN_LIBRARY.map(function(b,i){return '<option value="'+i+'">'+escapeHtml(b.title)+' · '+escapeHtml(b.author)+'</option>';}).join('');
+  libSel.innerHTML = '<option value="">-- 手动输入 --</option>' + BUILT_IN_LIBRARY.map(function(b,i){return '<option value="'+i+'">'+escapeHtml(b.title)+' · '+escapeHtml(libAuthors(b).join('、'))+'</option>';}).join('');
   if(id){
     const b = (data.books||[]).find(function(x){return x.id === id;});
     if(!b){ showToast('书籍不存在'); return; }
@@ -248,6 +301,8 @@ export function openBookModal(id){
     $('bookNote').value = '';
     libSel.value = '';
   }
+  const sug = $('bookAuthorSuggest');
+  if(sug){ sug.style.display = 'none'; sug.innerHTML = ''; }
   modal.classList.add('show');
 }
 
@@ -257,8 +312,59 @@ export function fillBookFromLibrary(val){
   const b = BUILT_IN_LIBRARY[idx];
   if(!b) return;
   $('bookTitle').value = b.title;
-  $('bookAuthor').value = b.author;
+  $('bookAuthor').value = '';
   $('bookCategory').value = b.category;
+  updateAuthorSuggestions();
+}
+
+/* 输入书名后，从书库匹配作者并展示可点选的候选（一本书多位作者则全部列出） */
+export function updateAuthorSuggestions(){
+  const sug = $('bookAuthorSuggest');
+  if(!sug) return;
+  const titleEl = $('bookTitle');
+  const q = (titleEl && titleEl.value || '').trim();
+  if(!q){
+    sug.style.display = 'none';
+    sug.innerHTML = '';
+    return;
+  }
+  const matches = searchBooksByTitle(q);
+  if(matches.length === 0){
+    sug.style.display = 'none';
+    sug.innerHTML = '';
+    return;
+  }
+  let html = '<div class="sug-hint">📚 书库里找到这些作者，点一下就能填：</div>';
+  matches.forEach(function(m){
+    html += '<div class="sug-group">';
+    html += '<div class="sug-title">《'+escapeHtml(m.title)+'》</div>';
+    html += '<div class="sug-authors">';
+    m.authors.forEach(function(a){
+      html += '<button type="button" class="sug-chip" data-author="'+escapeHtml(a)+'" data-title="'+escapeHtml(m.title)+'" data-cat="'+escapeHtml(m.category)+'">'+escapeHtml(a)+'</button>';
+    });
+    html += '</div>';
+    html += '</div>';
+  });
+  sug.innerHTML = html;
+  sug.style.display = 'block';
+  Array.prototype.forEach.call(sug.querySelectorAll('.sug-chip'), function(chip){
+    chip.addEventListener('click', function(){
+      pickAuthor(chip.getAttribute('data-author'), chip.getAttribute('data-title'), chip.getAttribute('data-cat'));
+    });
+  });
+}
+
+/* 点选作者：自动填好作者，并把书名补全为书库里的标准书名、带出分类 */
+export function pickAuthor(author, title, category){
+  const titleEl = $('bookTitle');
+  const authorEl = $('bookAuthor');
+  const catEl = $('bookCategory');
+  if(titleEl) titleEl.value = title;
+  if(authorEl) authorEl.value = author;
+  if(catEl && category) catEl.value = category;
+  const sug = $('bookAuthorSuggest');
+  if(sug){ sug.style.display = 'none'; sug.innerHTML = ''; }
+  showToast('已选作者：'+author);
 }
 
 export async function saveBook(){
