@@ -33,7 +33,8 @@ import {
 import {
   renderBook, switchBookTab, startReadingBook, finishBook, editBook,
   deleteBook, openBookModal, fillBookFromLibrary, saveBook,
-  addRecommendedBook, renderBookRecommendations
+  addRecommendedBook, renderBookRecommendations,
+  updateAuthorSuggestions, pickAuthor, searchBooksByTitle
 } from './features/books.js';
 import {
   updateSettings, addNewFood, deleteFood,
@@ -147,7 +148,7 @@ async function boot(){
   }
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js?v=43').catch(function(){});
+    navigator.serviceWorker.register('sw.js?v=44').catch(function(){});
   }
 }
 
@@ -185,6 +186,7 @@ const GLOBALS = {
   switchBookTab, startReadingBook, finishBook, editBook, deleteBook,
   openBookModal, fillBookFromLibrary, saveBook, addRecommendedBook,
   renderBook, renderBookRecommendations,
+  updateAuthorSuggestions, pickAuthor, searchBooksByTitle,
   // 首页
   renderHome, updateGreeting,
   // 设置 / 备份
